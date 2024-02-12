@@ -8,10 +8,10 @@ class Node {
 
   condensedLogToTreeLog(condensedLog) {
     return {
-      id: condensedLog.id,
-      timestamp: condensedLog.timestamp.split(" ")[0],
-      functionName: condensedLog.functionName,
-      logMessage: condensedLog.logMessage,
+      id : condensedLog.id,
+      timestamp : condensedLog.timestamp.split(" ")[0],
+      functionName : condensedLog.functionName,
+      logMessage : condensedLog.logMessage,
     };
   }
 

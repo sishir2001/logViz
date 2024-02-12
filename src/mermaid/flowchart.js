@@ -1,18 +1,17 @@
-const { startingLogs,endingLogs,logToCondensedLog } = require("../utils/logProcessing");
-const { writeFileAsync, createDirectory,executeCommand } = require("../utils/externalInteractions");
+const {startingLogs, endingLogs, logToCondensedLog} =
+    require("../utils/logProcessing");
+const {writeFileAsync, createDirectory, executeCommand} =
+    require("../utils/externalInteractions");
 const Node = require("../data-structures/functionHierarchyTree");
 
-function createNodeMermaid(id, name) {
-  return `${id}((${name}))`;
-}
+function createNodeMermaid(id, name) { return `${id}((${name}))`; }
 
 function createLinkBtwNodesMermaid(node1, node2) {
   return `      ${node1} --> ${node2}\n`;
 }
 
 function buildFunctionHierarchyTree(logs) {
-  let root = null,
-    currNode = null;
+  let root = null, currNode = null;
   for (const log of logs) {
     const condensedLog = logToCondensedLog(log);
     if (startingLogs.includes(condensedLog.logType.trim())) {
@@ -39,19 +38,13 @@ function traverseAndConstructMermaidTree(root, res) {
   if (root === null) {
     return res;
   }
-  const rootNodeMermaid = createNodeMermaid(
-    root.treeLog.id,
-    root.treeLog.functionName
-  );
+  const rootNodeMermaid =
+      createNodeMermaid(root.treeLog.id, root.treeLog.functionName);
   for (const child of root.children) {
-    const childNodeMermaid = createNodeMermaid(
-      child.treeLog.id,
-      child.treeLog.functionName
-    );
-    const linkedMermaid = createLinkBtwNodesMermaid(
-      rootNodeMermaid,
-      childNodeMermaid
-    );
+    const childNodeMermaid =
+        createNodeMermaid(child.treeLog.id, child.treeLog.functionName);
+    const linkedMermaid =
+        createLinkBtwNodesMermaid(rootNodeMermaid, childNodeMermaid);
     res += linkedMermaid;
     res = traverseAndConstructMermaidTree(child, res);
   }
@@ -62,17 +55,22 @@ async function convertTreeToMermaid(root) {
   const iter = "iter0";
   const initMermaid = `flowchart TD\n`;
   const interMermaid = traverseAndConstructMermaidTree(root, initMermaid);
-  const resultMermaid = `\`\`\`mermaid\n    %%{init: {'theme':'forest'}}%%\n    ${interMermaid}\`\`\``;
-  await createDirectory(`./generated/${iter}`,true);
+  const resultMermaid =
+      `\`\`\`mermaid\n    %%{init: {'theme':'forest'}}%%\n    ${
+          interMermaid}\`\`\``;
+  await createDirectory(`./generated/${iter}`, true);
   await writeFileAsync(`./generated/${iter}/functionTree.md`, resultMermaid);
   console.log("Mermaid file creation started ....");
-  try{
-    executeCommand(`mmdc -i ./generated/${iter}/functionTree.md -o ./generated/${iter}/functionTree.svg`);
+  try {
+    executeCommand(`mmdc -i ./generated/${
+        iter}/functionTree.md -o ./generated/${iter}/functionTree.svg`);
     console.log("Mermaid file creation ended succeded....");
-  }
-  catch(e){
+  } catch (e) {
     console.log(e);
   }
 }
 
-module.exports = {convertTreeToMermaid,buildFunctionHierarchyTree};
+module.exports = {
+  convertTreeToMermaid,
+  buildFunctionHierarchyTree
+};

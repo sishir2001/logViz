@@ -1,5 +1,5 @@
 const fs = require("fs").promises;
-const { exec } = require("child_process");
+const {exec} = require("child_process");
 
 async function readFileAsync(filePath) {
   try {
@@ -20,21 +20,20 @@ async function writeFileAsync(filePath, data) {
 
 async function createDirectory(path, isRecursive = false) {
   try {
-    await fs.mkdir(path, { recursive: isRecursive });
+    await fs.mkdir(path, {recursive : isRecursive});
   } catch (error) {
     console.error(
-      `Got an error trying to create a directory: ${error.message}`
-    );
+        `Got an error trying to create a directory: ${error.message}`);
   }
 }
 
-function executeCommand(command){
-  exec(command,(error,stdout,stderr)=>{
-    if(error){
+function executeCommand(command) {
+  exec(command, (error, stdout, stderr) => {
+    if (error) {
       console.error(`error: ${error.message}`);
       return;
     }
-    if(stderr){
+    if (stderr) {
       console.error(`stderr: ${stderr}`);
       return;
     }
@@ -42,5 +41,9 @@ function executeCommand(command){
   })
 }
 
-
-module.exports = { readFileAsync, writeFileAsync, createDirectory,executeCommand };
+module.exports = {
+  readFileAsync,
+  writeFileAsync,
+  createDirectory,
+  executeCommand
+};
