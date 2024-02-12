@@ -12,8 +12,8 @@ const endingLogs = [
   "DBQueryResult",
   "FunctionCallResult",
 ];
-const errorLogs = [ "Exception", "Error" ];
-const ignoreLogs = [ "Info" ];
+const errorLogs = ["Exception", "Error"];
+const ignoreLogs = ["Info"];
 
 function sortLogs(unsortedLogs) {
   const sortedLogs = unsortedLogs.sort((a, b) => {
@@ -28,7 +28,8 @@ function validateSortedLogs(sortedLogs) {
   let prevCounter = -1;
   for (let i = 0; i < sortedLogs.length; i++) {
     const currentCounter = parseInt(
-        sortedLogs[i]["_source"]["message"].split("|")[0].split(" ")[3]);
+      sortedLogs[i]["_source"]["message"].split("|")[0].split(" ")[3],
+    );
     if (currentCounter <= prevCounter) {
       return false;
     }
@@ -44,12 +45,12 @@ function logToCondensedLog(log) {
   // 4 - deployed pod name , 5 - service name , 6 - log mode , 7 - log type
   // 8 - function name , 9 - log message
   const condensedLog = {
-    id : id,
-    timestamp : array[0],
-    logMode : array[6],
-    logType : array[7],
-    functionName : array[8],
-    logMessage : array[9],
+    id: id,
+    timestamp: array[0],
+    logMode: array[6],
+    logType: array[7],
+    functionName: array[8],
+    logMessage: array[9],
   };
   return condensedLog;
 }
@@ -79,8 +80,10 @@ function validateFunctionCalls(sortedLogs) {
         return false;
       }
       const cLogType = endingLogs[cIndex];
-      if (cLogType !== condensedLog.logType.trim() ||
-          latestLog.functionName !== condensedLog.functionName) {
+      if (
+        cLogType !== condensedLog.logType.trim() ||
+        latestLog.functionName !== condensedLog.functionName
+      ) {
         console.log("latestLog", latestLog);
         console.log("currentLog", condensedLog);
         return false;
@@ -116,5 +119,5 @@ module.exports = {
   validateSortedLogs,
   logToCondensedLog,
   validateFunctionCalls,
-  printCondensedLogs
+  printCondensedLogs,
 };
