@@ -1,0 +1,12 @@
+{
+  "name": "logViz",
+  "version": "1.0.0",
+  "description": "Gives a functional hierarchy tree of the logs",
+  "main": "index.js",
+  "scripts": {
+    "dev": "node src/main.js"
+  },
+  "keywords": ["logs","visualization"],
+  "author": "Jaladi Saai Sishir",
+  "license": "ISC"
+}
