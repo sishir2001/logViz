@@ -190,7 +190,7 @@ async function convertTreeToMermaid(root) {
   const iter = "iter0";
   const initMermaid = `flowchart TD\n`;
   const interMermaid = traverseAndConstructMermaidTree(root, initMermaid);
-  const resultMermaid = `\`\`\`mermaid\n    ${interMermaid}\`\`\``;
+  const resultMermaid = `\`\`\`mermaid\n    %%{init: {'theme':'forest'}}%%\n    ${interMermaid}\`\`\``;
   await createDirectory(`./generated/${iter}`,true);
   await writeFileAsync(`./generated/${iter}/functionTree.md`, resultMermaid);
   console.log("Mermaid file creation started ....");
