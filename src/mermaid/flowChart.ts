@@ -1,18 +1,23 @@
-const { startingLogs,endingLogs,logToCondensedLog } = require("../utils/logProcessing");
-const { writeFileAsync, createDirectory,executeCommand } = require("../utils/externalInteractions");
-const Node = require("../data-structures/functionHierarchyTree");
+import Node from "../dataStructures/functionHierarchyTree";
+import { KibanaLog } from "../types";
+import { createDirectory, executeCommand, writeFileAsync } from "../utils/externalInteractions";
+import {
+  endingLogs,
+  logToCondensedLog,
+  startingLogs,
+} from "../utils/logProcessing";
 
-function createNodeMermaid(id, name) {
+function createNodeMermaid(id : string , name : string) : string {
   return `${id}((${name}))`;
 }
 
-function createLinkBtwNodesMermaid(node1, node2) {
+function createLinkBtwNodesMermaid(node1 : string , node2 : string ) {
   return `      ${node1} --> ${node2}\n`;
 }
 
-function buildFunctionHierarchyTree(logs) {
-  let root = null,
-    currNode = null;
+export function buildFunctionHierarchytree(logs: KibanaLog[]): Node | null {
+  let root: Node | null = null;
+  let currNode: Node | null = root;
   for (const log of logs) {
     const condensedLog = logToCondensedLog(log);
     if (startingLogs.includes(condensedLog.logType.trim())) {
@@ -21,21 +26,32 @@ function buildFunctionHierarchyTree(logs) {
         currNode = root;
       } else {
         const newNode = new Node(condensedLog);
-        currNode.addChild(newNode);
-        currNode = newNode;
+        if (currNode !== null) {
+          currNode.addChild(newNode);
+          currNode = newNode;
+        } else {
+          console.log("Error in building function hierarchy tree");
+          return null;
+        }
       }
     } else if (endingLogs.includes(condensedLog.logType.trim())) {
       const eTimestamp = new Date(condensedLog.timestamp.split(" ")[0]);
-      const sTimestamp = new Date(currNode.treeLog.timestamp);
-      const duration = eTimestamp - sTimestamp;
-      currNode.duration = duration;
-      currNode = currNode.parent;
+      if (currNode !== null) {
+        const sTimestamp = new Date(currNode.treeLog.timestamp);
+        const duration = eTimestamp.getTime() - sTimestamp.getTime();
+        currNode.duration = duration;
+        currNode = currNode.parent;
+      } else {
+        console.log("Error in building function hierarchy tree");
+        return null;
+      }
     }
   }
   return root;
 }
 
-function traverseAndConstructMermaidTree(root, res) {
+
+function traverseAndConstructMermaidTree(root : Node, res : string) : string {
   if (root === null) {
     return res;
   }
@@ -58,7 +74,8 @@ function traverseAndConstructMermaidTree(root, res) {
   return res;
 }
 
-async function convertTreeToMermaid(root) {
+
+export async function convertTreeToMermaid(root : Node) {
   const iter = "iter0";
   const initMermaid = `flowchart TD\n`;
   const interMermaid = traverseAndConstructMermaidTree(root, initMermaid);
@@ -74,5 +91,3 @@ async function convertTreeToMermaid(root) {
     console.log(e);
   }
 }
-
-module.exports = {convertTreeToMermaid,buildFunctionHierarchyTree};
