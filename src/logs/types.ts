@@ -1,10 +1,10 @@
 import {
-  isJSON,
-  __decodeString,
-  _decodeNumber,
-  noErrorOrNullValues,
   decodeArray,
-} from "./type-decoder";
+  __decodeString,
+  isJSON,
+  noErrorOrNullValues,
+  _decodeNumber,
+} from "type-decoder";
 
 export type KibanaLogSource = {
   message: string;
@@ -31,13 +31,13 @@ export type KibanaLog = {
 };
 
 export type CondensedKibanaLog = {
-  id : string,
-  timestamp : string,
-  logMode : string,
-  logType : string,
-  functionName : string,
-  logMessage: string
-}
+  id: string;
+  timestamp: string;
+  logMode: string;
+  logType: string;
+  functionName: string;
+  logMessage: string;
+};
 
 export function decodeKibanaLogHighlight(raw: any): KibanaLogHighlight | null {
   if (isJSON(raw)) {
