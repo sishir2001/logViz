@@ -41,6 +41,6 @@ export function traverseAndContructSvelteFlowTree(root : Node ,positionX : numbe
     resNodes.push(uiNode);
     return {
         nodes : resNodes,
-        edges : resEdges 
+        edges : resEdges
     }
 }
