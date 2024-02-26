@@ -1,10 +1,11 @@
-import { CondensedKibanaLog } from "../types";
+import type { CondensedKibanaLog } from "./types";
 
 interface TreeLog {
   id: string;
   timestamp: string;
   functionName: string;
-  logMessage: string;
+  startLog: string;
+  endLog:string | null;
 }
 
 class Node {
@@ -24,7 +25,8 @@ class Node {
       id: condensedLog.id,
       timestamp: condensedLog.timestamp.split(" ")[0],
       functionName: condensedLog.functionName,
-      logMessage: condensedLog.logMessage,
+      startLog: condensedLog.logMessage,
+      endLog : null
     };
   }
 
