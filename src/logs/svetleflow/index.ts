@@ -25,7 +25,6 @@ function createEdge(sourceId : string, targetId : string) : Edge {
     }
 }
 
-// !! Did not handle leaf nodes , so it's breaking
 export function traverseAndContructSvelteFlowTree(root : Node ,positionX : number, positionY : number) : SvelteTree {
     const uiNode = createNode(root.treeLog.id,root.treeLog.functionName,positionX,positionY);
     let currChildNodePositionX = positionX;
